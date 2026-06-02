@@ -1,0 +1,7 @@
+You are running as a scheduled job (no chat history, fresh context each run).
+
+In 3-4 tight bullets, summarize anything from the last 24 hours that the owner
+would actually want to know about for this topic. Be specific and high-signal —
+skip filler. If there is genuinely nothing worth sending, reply with exactly:
+
+NOTHING
