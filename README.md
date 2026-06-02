@@ -32,23 +32,16 @@ you ask.
 ```mermaid
 flowchart TD
     You(["You · Telegram"]) <--> Router["grammY router<br/>auth · queue · media · streaming"]
-    Router -->|"each forum topic =<br/>its own long-lived agent"| Sessions
 
-    subgraph Sessions["Per-topic isolated sessions"]
-        direction LR
-        T1["Coding"]
-        T2["Coach"]
-        T3["General"]
-    end
+    Router -->|"one isolated session<br/>per forum topic"| T1["Coding<br/>Claude Code session"]
+    Router --> T2["Coach<br/>Claude Code session"]
+    Router --> T3["General<br/>Claude Code session"]
 
-    Sessions --> CC["Claude Code<br/>persistent · resumable"]
+    T1 --> Mem["Layered memory<br/>daily notes → nightly rollup →<br/>MEMORY.md + per-topic"]
+    T2 --> Mem
+    T3 --> Mem
+    Mem -.->|"reinjected at session start"| Router
 
-    subgraph Memory["Layered memory"]
-        direction LR
-        Daily["Daily notes<br/>append-only"] -->|"nightly LLM rollup"| Long["MEMORY.md +<br/>per-topic memory"]
-    end
-
-    CC <--> Memory
     Crons["Cron + heartbeat jobs"] -->|"inbox · calendar ·<br/>proactive nudges"| Router
 ```
 
