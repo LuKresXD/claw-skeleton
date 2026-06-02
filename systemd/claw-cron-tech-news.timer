@@ -1,0 +1,9 @@
+[Unit]
+Description=Claw v2 Cron: tech-news
+
+[Timer]
+OnCalendar=*-*-* 08:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

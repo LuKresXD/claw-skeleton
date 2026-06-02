@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.env
+sessions.json
+stats-meta.json
+active-topics.json
+logs/
+group-history/
+*.log
+.DS_Store
+
+# Runtime state (moved-in subdirs)
+watcher/snapshot/
+watcher/tmp/
+status-bar/state-v2.json
+
+# Python bytecode + virtualenvs (audit WS-3: finance/teller/.venv was 81M untracked)
+**/__pycache__/
+**/.venv/
+cache/

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebSearch",
+      "WebFetch",
+      "mcp__caldav__list-calendars",
+      "mcp__caldav__list-events",
+      "mcp__caldav__create-event",
+      "mcp__caldav__update-event",
+      "mcp__caldav__delete-event"
+    ]
+  },
+  "enableAllProjectMcpServers": true
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Claw v2 Telegram Bot (Claude Code)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/.openclaw/workspace/claw-bot
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=5
+EnvironmentFile=/root/.openclaw/workspace/claw-bot/.env
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
