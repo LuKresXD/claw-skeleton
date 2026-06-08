@@ -1,0 +1,32 @@
+# MEMORY.md — universal context (example)
+
+> Your assistant's long-term memory. A nightly rollup promotes durable facts here
+> from daily notes — you don't usually edit it by hand. Keep it **lean**: durable
+> preferences, patterns, and lessons only. **Never** store point-in-time snapshots
+> (counts, "currently in X", today's numbers) here — they decay; pull those live.
+>
+> Copy this to `MEMORY.md` and make it yours.
+
+## Top Rules (read first, applied every turn)
+
+- Reply language: `<your default>`. Switch only when explicitly asked.
+- Memory, durable files, and internal notes are always written in `<language>`.
+- Don't cite snapshot data from this file as if it were live — hit the real source.
+
+## About the owner
+
+- `<name, role, what you're building — the durable stuff that won't change weekly>`
+- Prefers concise, high-signal answers. Ship-first.
+
+## Preferences
+
+- Temperature in Celsius. Times in `<timezone>`.
+- `<formatting rules, tooling conventions, how you like things done>`
+
+## Lessons Learned
+
+> One line each — mistakes the assistant has made before and should not repeat.
+
+- e.g. "Don't auto-add *optional* calendar invites — only confirmed events."
+- e.g. "Read the email body before classifying financial-service senders."
+- e.g. "Never put a secret value into a chat message or a committed file."

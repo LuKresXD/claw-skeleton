@@ -1,0 +1,34 @@
+# TOOLS.md — your tools & credentials reference (example)
+
+Copy this to `TOOLS.md` and fill it in with **your** tools. It's injected into the
+owner's sessions (see `CLAUDE.md` → "This Session"), so the assistant knows which
+CLIs it can call and where credentials live.
+
+> **Never put secret values in this file.** Keep secrets in `.env` or a gitignored
+> `secrets/` dir and only *reference* them here. `TOOLS.md` itself can stay private
+> too if you'd rather not commit your tool list.
+
+## Secrets convention
+
+- All credentials live in `secrets/*.env` (gitignored) or the bot's `.env`.
+- This file *names* a tool and *points at* its secret — it never contains the secret.
+
+## Example tools (replace with your own)
+
+- **gh** — GitHub CLI. `gh pr list`, `gh run list`. Auth via `gh auth login`.
+- **&lt;email-cli&gt;** — read/triage the inbox. Creds: `secrets/email.env`.
+  e.g. `mail search "in:inbox is:unread"`
+- **&lt;calendar-cli&gt;** — list/create events. Creds: `secrets/calendar.env`.
+- **&lt;music-api&gt;** — now-playing / listening stats. Creds: `secrets/music.env`.
+- **curl · node · python3 · git · ffmpeg** — general-purpose, no creds.
+
+## Telegram targets
+
+- Chat id: `<your supergroup id>` (also in `.env` as `CHAT_ID`).
+- Topic id → name mapping lives in `src/config.ts` (`TOPICS`) — keep that the source of truth.
+
+## Notes / gotchas
+
+- Document anything future-you will forget: rate limits, token TTLs, odd flags.
+- If a service needs periodic re-auth, write down **how** here — so a 3 a.m. session
+  isn't stuck guessing.

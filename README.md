@@ -10,6 +10,7 @@ memory, and a web of cron jobs that quietly keep an eye on your inbox, calendar,
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Telegram](https://img.shields.io/badge/grammY-26A5E4?logo=telegram&logoColor=white)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-D97757)
+![Build](https://github.com/LuKresXD/claw-skeleton/actions/workflows/build.yml/badge.svg)
 ![License](https://img.shields.io/badge/License-MIT-3da639)
 
 </div>
@@ -44,6 +45,8 @@ flowchart TD
 
     Crons["Cron + heartbeat jobs"] -->|"inbox · calendar ·<br/>proactive nudges"| Router
 ```
+
+> 📖 **Deeper dive:** [ARCHITECTURE.md](./ARCHITECTURE.md) — turn lifecycle + the memory pipeline, with diagrams.
 
 ## What makes it interesting
 
