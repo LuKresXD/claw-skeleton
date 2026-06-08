@@ -121,7 +121,7 @@ async function runDateSummarizer(
   workDir: string, dailyNotesDir: string,
 ): Promise<boolean> {
   const dailyNotesPath = resolve(workDir, dailyNotesDir, `${date}.md`);
-  const isthe ownerWorkspace = workDir === WORKSPACE;
+  const isOwnerWorkspace = workDir === WORKSPACE;
   const decisionsDir = resolve(workDir, 'obsidian-vault/Claw/Decisions');
 
   const prompt = `SESSION ENDING for topic "${topicName}". Transcript from ${date}:
@@ -159,7 +159,7 @@ Daily-note rules:
 - Always English; the owner quotes can stay in original language.
 - File may already exist — APPEND new entries (never overwrite existing ones or touch entries with summarized_at set).
 
-${isthe ownerWorkspace ? `Step 2 — Decisions/ backstop (the owner's workspace only).
+${isOwnerWorkspace ? `Step 2 — Decisions/ backstop (the owner's workspace only).
 
 Scan the transcript for non-trivial decisions: architectural / infra choices, project plans, tool selections, financial moves, internship / equity / housing / course-planning calls. If you find one or more, ALSO create ${decisionsDir}/<kebab-case-name>.md per entry. Glance at existing files in that dir for format reference (e.g. claw-checkpoint-cron.md, upgrade-to-opus-4-7.md).
 
@@ -234,7 +234,7 @@ Output only: DONE`;
       log.info(`[${topicName}/${date}] Summarize done`);
       // Auto-commit any vault changes (Decisions/ backstop). Bash sandbox in claude
       // forbids operating inside nested git repos, so we do the commit out here.
-      if (isthe ownerWorkspace) {
+      if (isOwnerWorkspace) {
         try {
           const vaultDir = resolve(WORKSPACE, 'obsidian-vault');
           execSync('git add -A && (git diff --cached --quiet || (git commit -m "$MSG" --quiet && git push --quiet))', {
