@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 
 // --- Paths ---------------------------------------------------------------
 // Root of the assistant's workspace. Everything (memory, vault, state) lives under here.
-export const WORKSPACE = process.env.CLAW_WORKSPACE || '/root/.openclaw/workspace';
+export const WORKSPACE = process.env.CLAW_WORKSPACE || resolve(process.env.HOME || process.cwd(), 'claw');
 export const BOT_DIR = resolve(WORKSPACE, 'claw-bot');
 export const PERSONAS_DIR = resolve(BOT_DIR, 'personas');
 
