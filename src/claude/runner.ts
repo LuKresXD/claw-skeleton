@@ -125,7 +125,7 @@ export async function runClaude(
   const clawThreadId = (!isGroupWorkspace && topicId > 0) ? String(topicId) : '';
 
   return new Promise<RunResult>((resolve, reject) => {
-    const child = spawn('/root/.local/bin/claude', args, {
+    const child = spawn(process.env.CLAUDE_BIN || 'claude', args, {
       cwd: workDir,
       env: { ...process.env, HOME: '/root', IS_SANDBOX: '1', CLAW_CHAT_ID: clawChatId, CLAW_THREAD_ID: clawThreadId },
       stdio: ['pipe', 'pipe', 'pipe'],

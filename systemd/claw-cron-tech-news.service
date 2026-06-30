@@ -3,8 +3,8 @@ Description=Claw v2 Cron Runner: tech-news
 
 [Service]
 Type=oneshot
-User=root
-ExecStart=/root/.openclaw/workspace/claw-bot/cron-scripts/run-cron.sh 1000001 /root/.openclaw/workspace/claw-bot/cron-prompts/example.txt 300 sonnet
-EnvironmentFile=/root/.openclaw/workspace/claw-bot/.env
+User=youruser
+ExecStart=/home/youruser/claw/claw-bot/cron-scripts/run-cron.sh 1000001 /home/youruser/claw/claw-bot/cron-prompts/example.txt 300 sonnet
+EnvironmentFile=/home/youruser/claw/claw-bot/.env
 Environment=TZ=America/Chicago
 TimeoutStartSec=3660

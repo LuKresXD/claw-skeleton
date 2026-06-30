@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawn } from 'node:child_process';
+import { homedir } from 'node:os';
 import { listSessions, reset, getSession } from './session-manager.js';
 import { isActive } from './active-tracker.js';
 import { summarizeAndSave } from '../bot/commands.js';
@@ -11,7 +12,7 @@ import {
 } from '../config.js';
 import { log } from '../util/logger.js';
 
-const CLAUDE_BIN = '/root/.local/bin/claude';
+const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
 const EVAL_TIMEOUT_MS = 45_000;
 
 // Cache of "keep" verdicts so we don't re-eval the same idle session every sweep.
@@ -55,7 +56,7 @@ function resolveTopicTarget(id: number): { workDir: string; chatId: string; thre
 /** Slugify workDir → claude transcripts dir, mirroring commands.ts */
 function sessionDirForWorkDir(workDir: string): string {
   const slug = workDir.replace(/[/.]/g, '-');
-  return resolve('/root/.claude/projects', slug);
+  return resolve(homedir(), '.claude/projects', slug);
 }
 
 /**

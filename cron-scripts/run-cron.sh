@@ -5,7 +5,7 @@
 # Runs claude -p with the given prompt, captures output, sends to Telegram topic.
 set -euo pipefail
 
-WORKSPACE="/root/.openclaw/workspace"
+WORKSPACE="${CLAW_WORKSPACE:-$HOME/claw}"
 set -a
 source "$WORKSPACE/claw-bot/.env"
 set +a
@@ -73,7 +73,7 @@ EXTRA_DIRS=(--add-dir "$WORKSPACE/obsidian-vault" --add-dir /tmp)
 # Pre-pull vault so Claude reads latest. Bash sandbox forbids it from claude.
 (cd "$WORKSPACE/obsidian-vault" && git pull --quiet) > /dev/null 2>&1 || true
 
-RESULT=$(cd "$CRON_WORKDIR" && CLAW_CHAT_ID="$CHAT_ID" timeout "${TIMEOUT}s" /root/.local/bin/claude -p "$PROMPT" \
+RESULT=$(cd "$CRON_WORKDIR" && CLAW_CHAT_ID="$CHAT_ID" timeout "${TIMEOUT}s" "${CLAUDE_BIN:-claude}" -p "$PROMPT" \
   --model "$MODEL" \
   $EFFORT_FLAG \
   --no-session-persistence \

@@ -9,11 +9,11 @@ UNIT="${1:-unknown.service}"
 # %n is already the literal unit name (dashes are literal, not escaped slashes).
 # Do NOT run systemd-escape -u on it - that mangles claw-cron-x.service into claw/cron/x.service.
 
-ENV_FILE=/root/.openclaw/workspace/claw-bot/.env
+ENV_FILE="${CLAW_WORKSPACE:-$HOME/claw}/claw-bot/.env"
 if [ -f "$ENV_FILE" ]; then set -a; . "$ENV_FILE"; set +a; fi
 TOKEN="${BOT_TOKEN:-}"
 CHAT="${CHAT_ID:-}"
-TOPICS_LIB=/root/.openclaw/workspace/claw-bot/cron-scripts/lib/topics.sh
+TOPICS_LIB="${CLAW_WORKSPACE:-$HOME/claw}/claw-bot/cron-scripts/lib/topics.sh"
 if [ -f "$TOPICS_LIB" ]; then . "$TOPICS_LIB"; fi
 ALERTS_TOPIC="${CLAW_ALERTS_TOPIC:-1000005}"
 [ -z "$TOKEN" ] && { echo "notify-failure: no BOT_TOKEN, abort" >&2; exit 0; }

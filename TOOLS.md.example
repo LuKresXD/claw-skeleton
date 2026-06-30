@@ -12,8 +12,33 @@ CLIs it can call and where credentials live.
 
 - All credentials live in `secrets/*.env` (gitignored) or the bot's `.env`.
 - This file *names* a tool and *points at* its secret — it never contains the secret.
+- Read a secret by its exact path when you need it; never bulk-scan the `secrets/` tree.
 
-## Example tools (replace with your own)
+## The CLI toolbelt (`src/tools/`)
+
+These are how the assistant *acts* in Telegram mid-turn — standalone CLIs it shells out to via Bash.
+Sanitized examples ship in the skeleton; they read the bot's `.env` for `BOT_TOKEN`/`CHAT_ID`.
+
+- **claw-say** — post or edit a message. `claw-say --progress "⏳ 40% · …"` manages **one**
+  self-updating status line per turn (the only thing you should use for progress).
+- **claw-react** — set/clear an emoji reaction on a message.
+- **claw-mermaid** — render Mermaid diagram code to a PNG (so a diagram shows as an image, not source).
+- **claw-host** — upload a local file to object storage and print a public URL (for inline `![](url)`).
+  Creds: `secrets/host.env` (e.g. an S3/R2/Cloudinary bucket).
+- **claw-ask** — post a poll / quick-reply and collect the answer.
+- **claw-task** — delegate a parallel sub-agent and fold its result back in.
+- **claw-monitor** — arm a detached watcher (pid/file/log) that wakes a fresh turn when a job finishes.
+
+## Telegram rich-output toy box
+
+Replies render as native Telegram rich text. Beyond Markdown, the sender understands:
+- `<tg-time unix="…" format="wDt">…</tg-time>` — live, viewer-timezone date/time (use for deadlines).
+- `<tg-map lat="…" long="…" zoom="14"/>` — inline location map.
+- `![](https://… "cap")` — remote image/video/audio inline.
+- `<<FILE: /path | cap>>` — a local file as its own bubble; `<<INLINE: /path | cap>>` — local media inline.
+- `{{react:EMOJI}}` — set a reaction on the triggering message; `{{silent}}` — post nothing, just "seen".
+
+## Example integrations (replace with your own)
 
 - **gh** — GitHub CLI. `gh pr list`, `gh run list`. Auth via `gh auth login`.
 - **&lt;email-cli&gt;** — read/triage the inbox. Creds: `secrets/email.env`.

@@ -3,6 +3,7 @@ import { execSync, spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { homedir } from 'node:os';
 import { WORKSPACE, TOPICS, GUEST_TOPICS, GUEST_WORKSPACE, GUEST_USER_ID, GUEST_CHAT_ID, BOT_DIR, GROUP_CHATS, DAY_BOUNDARY_HOUR, OWNER_USER_ID, MAX_CONCURRENT, resolveModel } from '../config.js';
 import { getQueueStats } from './middleware/queue.js';
 import { getPendingGroupCount } from './middleware/mediaGroup.js';
@@ -30,7 +31,7 @@ function getNotesDate(utcTimestamp: string): string {
  */
 function sessionDirForWorkDir(workDir: string): string {
   const slug = workDir.replace(/[/.]/g, '-');
-  return resolve('/root/.claude/projects', slug);
+  return resolve(homedir(), '.claude/projects', slug);
 }
 
 /**
@@ -203,7 +204,7 @@ Decisions/ rules:
 Output only: DONE`;
 
   try {
-    const child = spawn('/root/.local/bin/claude', [
+    const child = spawn(process.env.CLAUDE_BIN || 'claude', [
       '-p',
       '--no-session-persistence',
       '--model', resolveModel('sonnet'),

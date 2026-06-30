@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, renameSync, chmodSync, existsSync, readdir
 import { join } from 'node:path';
 import { log } from '../util/logger.js';
 import type { MyContext } from '../index.js';
+import { WORKSPACE } from '../config.js';
 
 /**
  * Callback-query handler for claw-ask inline keyboards.
@@ -22,7 +23,7 @@ import type { MyContext } from '../index.js';
  *   aq:<askId>:cancel    user cancels
  */
 
-const STATE_DIR = '/root/.openclaw/workspace/state/claw-ask';
+const STATE_DIR = join(WORKSPACE, 'state/claw-ask');
 
 interface PendingAsk {
   askId: string;

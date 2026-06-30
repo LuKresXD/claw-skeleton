@@ -24,9 +24,10 @@ build your own.
 It's not a wrapper around a chat completion. Each Telegram forum topic spawns a **long-lived,
 resumable Claude Code session** with its own persona and memory, so "Coding," "Coach," and
 "Finance" are genuinely different agents that never bleed into each other. A nightly rollup
-distills the day's notes into durable memory, and a fleet of cron jobs turns the bot from
-reactive to **proactive** — triaging email, drafting calendar events, and nudging you before
-you ask.
+distills the day's notes into durable memory, a fleet of cron jobs turns the bot from
+reactive to **proactive**, and the assistant talks back through Telegram's full native rich
+formatting — tables, math, live date entities, inline media — by shelling out to its own
+small CLI toolbelt.
 
 ## Architecture
 
@@ -43,25 +44,38 @@ flowchart TD
     T3 --> Mem
     Mem -.->|"reinjected at session start"| Router
 
+    T1 -.->|"shells out to"| CLI["CLI toolbelt<br/>post · react · media ·<br/>diagrams · delegate · monitor"]
+    CLI -.-> You
+
     Crons["Cron + heartbeat jobs"] -->|"inbox · calendar ·<br/>proactive nudges"| Router
 ```
 
-> 📖 **Deeper dive:** [ARCHITECTURE.md](./ARCHITECTURE.md) — turn lifecycle + the memory pipeline, with diagrams.
+> 📖 **Deeper dive:** [ARCHITECTURE.md](./ARCHITECTURE.md) — turn lifecycle, the memory
+> pipeline, the rich-output path, and the CLI toolbelt, with diagrams.
 
 ## What makes it interesting
 
 - 🧠 **Per-topic isolated agents** — each forum topic is its own persistent Claude Code
-  session with its own persona and memory file. No cross-talk, no context soup.
+  session with its own persona and memory file. No cross-talk, no context soup. Sub-topics
+  in a topic-enabled supergroup get their own isolated session too, keyed by thread.
 - 📚 **Memory that survives restarts** — append-only daily notes get promoted by a nightly
   LLM rollup into a lean long-term `MEMORY.md` plus per-topic files. The bot wakes up knowing you.
 - ⏰ **Proactive, not just reactive** — a shared cron runner fires scheduled Claude jobs
   (inbox triage, calendar, digests, health) and routes the results to the right topic.
-- 🎭 **Personas & guest mode** — per-topic personas, prefix routing, and a guest mode you
-  can `@mention` from any chat the bot isn't even in.
+- 💬 **Native rich Telegram output** — replies render as real Telegram rich text: tables,
+  task lists, fenced code, `$LaTeX$`, spoilers, collapsibles, live timezone-aware date
+  entities, maps, and inline images/video/audio — with an automatic HTML fallback.
+- 🧰 **A CLI toolbelt the bot wields itself** — small standalone CLIs the agent shells out to
+  in order to *act* in Telegram mid-turn: post/edit a live progress line, drop a reaction,
+  send media, render a Mermaid diagram to an image, host a file, delegate a parallel
+  sub-agent, or arm a watcher that wakes a fresh turn when a long background job finishes.
+- 🎭 **Personas & guest mode** — per-topic personas, prefix routing, and a stub-then-edit
+  guest mode you can `@mention` from any chat the bot isn't even in.
 - ♻️ **Self-maintaining** — Claw can read and edit its own source, rebuild, and restart;
-  *smart auto-clear* summarizes idle sessions instead of nuking them mid-thought.
+  *smart auto-clear* summarizes idle sessions into memory instead of nuking them mid-thought.
 - 🔧 **Production-hardened details** — model-alias indirection, periodic context re-injection,
-  streaming Telegram message edits, and systemd units with reliability drop-ins + failure alerts.
+  streaming Telegram message edits, per-topic queueing, and systemd units with reliability
+  drop-ins + failure alerts.
 
 ## Project structure
 
@@ -72,7 +86,8 @@ claw-skeleton/
 ├── src/
 │   ├── bot/            # grammY router, middleware, commands, guest mode
 │   ├── claude/         # session lifecycle: runner, auto-clear, checkpoints, prompt builder
-│   ├── telegram/       # sender — markdown → Telegram HTML, streaming edits
+│   ├── telegram/       # sender — rich Telegram output, streaming edits, HTML fallback
+│   ├── tools/          # the CLI toolbelt the bot shells out to (sanitized examples)
 │   ├── util/           # logger, sanitizer, graceful shutdown
 │   ├── config.ts       # topics, personas, models, constants
 │   └── index.ts        # entry point

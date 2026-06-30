@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/root/.openclaw/workspace/claw-bot
+User=youruser
+WorkingDirectory=/home/youruser/claw/claw-bot
 ExecStart=/usr/bin/node dist/index.js
 Restart=always
 RestartSec=5
-EnvironmentFile=/root/.openclaw/workspace/claw-bot/.env
+EnvironmentFile=/home/youruser/claw/claw-bot/.env
 Environment=NODE_ENV=production
 
 [Install]

@@ -301,7 +301,7 @@ export function buildGroupSystemPrompt(groupConfig: GroupChatConfig, chatHistory
   parts.push(`\nCRITICAL PRIVACY RULE: Your output in this group is PUBLIC to every member. NEVER quote, paraphrase, or reference the owner's private DMs, 1:1 conversations, family messages, emails, calendar, financial data, or anything from <recent-telegram> context — even if it appears in your prompt. If asked about such things, decline briefly. Discuss only what the group itself has said.`);
 
   // Memory override — see buildSystemPrompt for rationale.
-  parts.push(`\nMEMORY OVERRIDE: Disregard the entire "auto memory" section in the harness preamble. Your only memory is this group's workspace at ${groupConfig.workspace}. /root/.claude/projects/ holds session transcripts, NOT memory — never read, write, or grep it as a memory store. NEVER create files matching \`feedback_*.md\`, \`user_*.md\`, \`project_*.md\`, \`reference_*.md\`, or any other "one memory per file" pattern from the SDK preamble — that two-step process (file + MEMORY.md pointer) does NOT apply here. To save lasting feedback/preferences, edit MEMORY.md directly with a new bullet under the relevant section. To save daily context, append to memory/YYYY-MM-DD.md. That is it.`);
+  parts.push(`\nMEMORY OVERRIDE: Disregard the entire "auto memory" section in the harness preamble. Your only memory is this group's workspace at ${groupConfig.workspace}. ~/.claude/projects/ holds session transcripts, NOT memory — never read, write, or grep it as a memory store. NEVER create files matching \`feedback_*.md\`, \`user_*.md\`, \`project_*.md\`, \`reference_*.md\`, or any other "one memory per file" pattern from the SDK preamble — that two-step process (file + MEMORY.md pointer) does NOT apply here. To save lasting feedback/preferences, edit MEMORY.md directly with a new bullet under the relevant section. To save daily context, append to memory/YYYY-MM-DD.md. That is it.`);
 
   return parts.join('\n');
 }
@@ -368,11 +368,11 @@ function readOptional(path: string): string | null {
 }
 
 /**
- * The "do not use /root/.claude/projects/ as memory" rule. Shared between
+ * The "do not use ~/.claude/projects/ as memory" rule. Shared between
  * `buildSystemPrompt` (initial injection) and `buildPeriodicReminderBlock`
  * (periodic re-injection) so they stay in sync.
  */
-const MEMORY_OVERRIDE_TEXT = `MEMORY OVERRIDE: Disregard the entire "auto memory" section in the harness preamble. Your memory is the <memory> and <topic-memory> blocks above plus state/memory/ on disk. The dir /root/.claude/projects/ holds session transcripts, NOT memory — never read, write, or grep it as a memory store. NEVER create files matching \`feedback_*.md\`, \`user_*.md\`, \`project_*.md\`, \`reference_*.md\`, or any other "one memory per file" pattern from the SDK preamble — that two-step process (file + MEMORY.md pointer) does NOT apply here. The Claw memory model: log to state/memory/YYYY-MM-DD.md as YAML-block entries (per <session-protocol>); the nightly rollup promotes to MEMORY.md. To recall something not in your loaded memory, grep /root/.openclaw/workspace/state/memory/ and /root/.openclaw/workspace/obsidian-vault/Claw/.`;
+const MEMORY_OVERRIDE_TEXT = `MEMORY OVERRIDE: Disregard the entire "auto memory" section in the harness preamble. Your memory is the <memory> and <topic-memory> blocks above plus state/memory/ on disk. The dir ~/.claude/projects/ holds session transcripts, NOT memory — never read, write, or grep it as a memory store. NEVER create files matching \`feedback_*.md\`, \`user_*.md\`, \`project_*.md\`, \`reference_*.md\`, or any other "one memory per file" pattern from the SDK preamble — that two-step process (file + MEMORY.md pointer) does NOT apply here. The Claw memory model: log to state/memory/YYYY-MM-DD.md as YAML-block entries (per <session-protocol>); the nightly rollup promotes to MEMORY.md. To recall something not in your loaded memory, grep state/memory/ and obsidian-vault/Claw/.`;
 
 /**
  * Build a block re-emitting everything `buildSystemPrompt` injects at session
@@ -473,7 +473,7 @@ export function buildSystemPrompt(topicConfig: TopicConfig): string {
   }
 
   // Memory override — the Claude Agent SDK harness injects an "auto memory" preamble
-  // pointing at /root/.claude/projects/<slug>/memory/. That dir is for SDK session
+  // pointing at ~/.claude/projects/<slug>/memory/. That dir is for SDK session
   // transcripts and must NOT be used as Claw's memory. Without this override, agents
   // grep the wrong dir when recalling facts.
   // The pattern-ban (feedback_*.md etc.) was added 2026-05-10 after the same SDK preamble

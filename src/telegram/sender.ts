@@ -2,7 +2,7 @@ import { type Api, InputFile } from 'grammy';
 import type { InputMediaPhoto } from 'grammy/types';
 import { existsSync } from 'node:fs';
 import { extname, resolve } from 'node:path';
-import { TG_MAX_LENGTH } from '../config.js';
+import { TG_MAX_LENGTH, WORKSPACE } from '../config.js';
 import { log } from '../util/logger.js';
 
 const PHOTO_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic']);
@@ -113,7 +113,7 @@ const TG_ALBUM_MAX = 10;
 /** Telegram's caption hard limit. */
 const TG_CAPTION_MAX = 1024;
 /** Directories an outbound file is allowed to come from. */
-const ALLOWED_SEND_ROOTS = ['/root/.openclaw/workspace', '/tmp'];
+const ALLOWED_SEND_ROOTS = [WORKSPACE, '/tmp'];
 
 /**
  * Resolve `p` and confirm it lives under an allowed root. Guards against

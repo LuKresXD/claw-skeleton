@@ -22,7 +22,7 @@ import type { MyContext } from '../index.js';
  *       https://core.telegram.org/bots/api#answerguestquery
  */
 
-const CLAUDE_BIN = '/root/.local/bin/claude';
+const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
 const CLAUDE_TIMEOUT_MS = 50_000;
 const MAX_REPLY_CHARS = 4000;
 const CACHE_TTL_MS = 5 * 60 * 1000;

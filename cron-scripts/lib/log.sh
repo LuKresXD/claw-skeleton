@@ -13,7 +13,7 @@
 # - No secrets: callers pass plain status strings, never token values.
 
 # Resolve workspace if the caller didn't set it.
-: "${CLAW_LOG_WORKSPACE:=${WORKSPACE:-/root/.openclaw/workspace}}"
+: "${CLAW_LOG_WORKSPACE:=${WORKSPACE:-$HOME/claw}}"
 
 # Append-only cron execution log (one JSON object per run). Rotated by
 # rotate_cron_executions() to keep ~90 days. See [IMP-OBS-03].

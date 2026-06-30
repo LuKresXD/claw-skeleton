@@ -16,7 +16,7 @@
 #   [Recent travel: ...]
 #   [Focus: ...]
 set -euo pipefail
-WORKSPACE="${WORKSPACE:-/root/.openclaw/workspace}"
+WORKSPACE="${WORKSPACE:-$HOME/claw}"
 
 DETECTED_TZ=$(jq -r '.tz // "America/Chicago"' "$WORKSPACE/state/context/timezone.json" 2>/dev/null || echo "America/Chicago")
 echo "[Time: $(TZ="$DETECTED_TZ" date '+%Y-%m-%d %H:%M %Z')]"
