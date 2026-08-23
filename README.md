@@ -13,21 +13,29 @@ memory, and a web of cron jobs that quietly keep an eye on your inbox, calendar,
 ![Build](https://github.com/LuKresXD/claw-skeleton/actions/workflows/build.yml/badge.svg)
 ![License](https://img.shields.io/badge/License-MIT-3da639)
 
+**Free skeleton — a June 2026 snapshot of the core engine.**
+The living, complete system is **[Claw Pro](#-claw-pro--the-full-version)** (paid, private repo).
+
 </div>
 
 ---
 
-Claw is my Telegram-based personal assistant. This repo is its **open skeleton** — the full
-engine and architecture, with my personal data and integrations stripped out so you can
-build your own.
+> ## ⚠️ This is the old, free version
+>
+> This repo is a **frozen mid-2026 snapshot** of Claw's core engine with maybe half of
+> the upgrades the real system has today. It builds, it runs, and it's a solid base to
+> study or hack on — but it's **not maintained**, some edges are rough by design, and the
+> integrations that make Claw an actual chief-of-staff were stripped out.
+>
+> **Test it freely. If you want the real thing, [buy Claw Pro](#-claw-pro--the-full-version).**
 
-It's not a wrapper around a chat completion. Each Telegram forum topic spawns a **long-lived,
-resumable Claude Code session** with its own persona and memory, so "Coding," "Coach," and
-"Finance" are genuinely different agents that never bleed into each other. A nightly rollup
-distills the day's notes into durable memory, a fleet of cron jobs turns the bot from
-reactive to **proactive**, and the assistant talks back through Telegram's full native rich
-formatting — tables, math, live date entities, inline media — by shelling out to its own
-small CLI toolbelt.
+Claw is my Telegram-based personal assistant. It's not a wrapper around a chat completion:
+each Telegram forum topic spawns a **long-lived, resumable Claude Code session** with its
+own persona and memory, so "Coding," "Coach," and "Finance" are genuinely different agents
+that never bleed into each other. A nightly rollup distills the day's notes into durable
+memory, a fleet of cron jobs turns the bot from reactive to **proactive**, and the
+assistant talks back through Telegram's full native rich formatting by shelling out to its
+own small CLI toolbelt.
 
 ## Architecture
 
@@ -53,54 +61,43 @@ flowchart TD
 > 📖 **Deeper dive:** [ARCHITECTURE.md](./ARCHITECTURE.md) — turn lifecycle, the memory
 > pipeline, the rich-output path, and the CLI toolbelt, with diagrams.
 
-## What makes it interesting
+## What this free snapshot gives you
 
 - 🧠 **Per-topic isolated agents** — each forum topic is its own persistent Claude Code
-  session with its own persona and memory file. No cross-talk, no context soup. Sub-topics
-  in a topic-enabled supergroup get their own isolated session too, keyed by thread.
+  session with its own persona and memory file. No cross-talk, no context soup.
 - 📚 **Memory that survives restarts** — append-only daily notes get promoted by a nightly
-  LLM rollup into a lean long-term `MEMORY.md` plus per-topic files. The bot wakes up knowing you.
+  LLM rollup into a lean long-term `MEMORY.md` plus per-topic files.
 - ⏰ **Proactive, not just reactive** — a shared cron runner fires scheduled Claude jobs
-  (inbox triage, calendar, digests, health) and routes the results to the right topic.
-- 💬 **Native rich Telegram output** — replies render as real Telegram rich text: tables,
-  task lists, fenced code, `$LaTeX$`, spoilers, collapsibles, live timezone-aware date
-  entities, maps, and inline images/video/audio — with an automatic HTML fallback.
-- 🧰 **A CLI toolbelt the bot wields itself** — small standalone CLIs the agent shells out to
-  in order to *act* in Telegram mid-turn: post/edit a live progress line, drop a reaction,
-  send media, render a Mermaid diagram to an image, host a file, delegate a parallel
-  sub-agent, or arm a watcher that wakes a fresh turn when a long background job finishes.
-- 🎭 **Personas & guest mode** — per-topic personas, prefix routing, and a stub-then-edit
-  guest mode you can `@mention` from any chat the bot isn't even in.
-- ♻️ **Self-maintaining** — Claw can read and edit its own source, rebuild, and restart;
-  *smart auto-clear* summarizes idle sessions into memory instead of nuking them mid-thought.
-- 🔧 **Production-hardened details** — model-alias indirection, periodic context re-injection,
-  streaming Telegram message edits, per-topic queueing, and systemd units with reliability
-  drop-ins + failure alerts.
+  and routes results to the right topic.
+- 💬 **Native rich Telegram output** — tables, task lists, `$LaTeX$`, spoilers,
+  collapsibles, live date entities, inline media — with an automatic HTML fallback.
+- 🧰 **A CLI toolbelt the bot wields itself** — post/edit a live progress line, drop a
+  reaction, send media, render a diagram, delegate a sub-agent, arm a completion watcher.
+- 🎭 **Personas & guest mode**, ♻️ **self-maintenance**, 🔧 **systemd patterns**.
 
-## Project structure
+## 💎 Claw Pro — the full version
 
-```
-claw-skeleton/
-├── CLAUDE.md           # the blueprint — what the assistant is and how it remembers
-├── .env.example        # the environment variables you fill in
-├── src/
-│   ├── bot/            # grammY router, middleware, commands, guest mode
-│   ├── claude/         # session lifecycle: runner, auto-clear, checkpoints, prompt builder
-│   ├── telegram/       # sender — rich Telegram output, streaming edits, HTML fallback
-│   ├── tools/          # the CLI toolbelt the bot shells out to (sanitized examples)
-│   ├── util/           # logger, sanitizer, graceful shutdown
-│   ├── config.ts       # topics, personas, models, constants
-│   └── index.ts        # entry point
-├── cron-scripts/       # shared cron runner framework + libs
-├── cron-prompts/       # example scheduled-job prompts
-├── systemd/            # unit + timer patterns (bot, cron, reliability drop-ins)
-└── personas/           # example personas (default, coding, coach)
-```
+The private repo is the **complete, current, sanitized production system** — every
+subsystem below ran for months in the real deployment, with the operational docs
+explaining why it's built that way. Two tiers in one repo (`main` = clean core,
+`full` = everything):
 
-**Start with [`CLAUDE.md`](./CLAUDE.md)** — it's the spec that defines what the assistant
-is, how it remembers, and how it behaves. The TypeScript is the engine; `CLAUDE.md` is the soul.
+| Area | What Pro has that this snapshot doesn't |
+|---|---|
+| 📬 **Heartbeat** | Deterministic email+calendar pipeline: SQLite ledger, batched LLM classify, per-topic alert routing, quiet hours + morning brief, open-loop inbox tracking, reply-to-archive, calendar auto-add with dedup & duplicate-twin cleanup, a live "situation header" in every session, evening debrief |
+| 📦 **Packages & finance** | Shipment tracking with status cards; account/subscription ledger with lifecycle alerts and net-worth tracking |
+| ❤️ **Health** | Wearable/food/scale/sleep ledger, wake-triggered daily digest, weekly review, FDR-gated cross-signal insights, designed cards |
+| ☎️ **Voice** | The assistant makes real phone calls: realtime speech-to-speech, IVR navigation with synthesized keypresses, hold-music patience, call budgets, a local simulator |
+| 🌐 **Browser agent** | Persistent headless-Chromium daemon surviving across turns (multi-turn logins/2FA), optional proxy via your Mac |
+| 💻 **Mac control** | Tailscale SSH behind a fail-closed physical Allow/Deny gate with phone approval, time-boxed tap-free windows, keychain-context exec bridge |
+| 🎛 **Hardware keypad** | Desk keypad bridge: sessions as RGB status lights, GO/STOP, push-to-talk voice, effort dial, model knob |
+| 💡 **Idea engine** | Nightly source→generate→debate (Bull/Bear/Judge)→gate pipeline that stays silent unless an idea survives |
+| 🚀 **Engine upgrades** | Multi-account subscription routing with per-model wall fallback, mid-turn steering, multi-agent work-log rendering, `/rewind` snapshots, structured `/compact` handoffs, incremental memory flush, memory search, partner mode (isolated second user), usage/cost analytics cards, and months of hardening this snapshot predates |
 
-## Build your own
+**How to buy:** email **me@lukres.dev** (or open an issue here and I'll reach out).
+You get an invite to the private repo — both tiers, the docs, and my setup notes.
+
+## Build your own (free version)
 
 ```bash
 # 1. create a Telegram bot via @BotFather, make a topic-enabled supergroup
@@ -113,13 +110,12 @@ npm run build && npm start
 # 3. (optional) install the systemd units to run it 24/7 + on a schedule
 ```
 
-This is a **sanitized skeleton**, not a turnkey app: the personal integrations
-(email, calendar, finance, health…) and data were removed by design. Point your own Claude
-Code at the repo and have it flesh out the parts you want — that's the whole idea.
+**Start with [`CLAUDE.md`](./CLAUDE.md)** — it's the spec that defines what the assistant
+is, how it remembers, and how it behaves. The TypeScript is the engine; `CLAUDE.md` is the soul.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+This snapshot: MIT — see [LICENSE](./LICENSE). Claw Pro is licensed separately (proprietary).
 
 <div align="center">
 <sub>Built by <a href="https://github.com/LuKresXD">@LuKresXD</a> · powered by Claude Code 🪼</sub>
