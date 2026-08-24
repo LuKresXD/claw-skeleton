@@ -77,6 +77,9 @@ Claw ·  💭 reads the unit file, checks systemctl, greps the logs      ← liv
 | 🧰 | **A CLI toolbelt the bot wields itself** — post/edit a live progress line, drop a reaction, send media mid-turn. |
 | 🎭 | **Personas & guest mode** — per-topic personas, prefix routing, and a stub-then-edit guest mode you can `@mention` from a chat the bot isn't even in. |
 | ♻️ | **Self-maintenance** — Claw reads and edits its own source, rebuilds, restarts; smart auto-clear summarizes idle sessions into memory instead of nuking them mid-thought. |
+| 🕶 | **Incognito** — a DM outside any topic runs on an ephemeral persona with no memory writes, and its messages delete themselves after a period of inactivity. |
+| 📡 | **Cross-topic live feed** — every finished turn appends one line that other topics see as `[Live]` context, so agents know what just happened elsewhere without waiting for the nightly rollup. |
+| 👥 | **Group chats** — a rolling per-group transcript so the bot can follow a conversation it only occasionally gets mentioned in. |
 | 🔧 | **Production patterns** — model-alias indirection, periodic context re-injection, streaming message edits, per-topic queueing, systemd units with reliability drop-ins. |
 
 ## Quick start
@@ -166,7 +169,7 @@ operational lessons that explain *why* each piece is built the way it is.
 | Per-topic isolated agents | ✅ | ✅ |
 | Layered memory + nightly rollup | ✅ | ✅ **+ memory search, incremental flush** |
 | Rich Telegram output | ✅ | ✅ **+ collages, cards, diagrams, charts** |
-| CLI toolbelt | 3 tools | **15+ tools** (polls, watchers, delegation, diagrams, hosting) |
+| CLI toolbelt | 2 tools | **15+ tools** (polls, watchers, delegation, diagrams, hosting) |
 | Personas & guest mode | ✅ | ✅ **+ partner mode (isolated 2nd user)** |
 | Session lifecycle | auto-clear | **+ `/rewind`, structured `/compact`, checkpoints** |
 | Model routing | single account | **multi-account pool, wall detection, usage cards** |
@@ -178,6 +181,9 @@ operational lessons that explain *why* each piece is built the way it is.
 | Mac remote control | ❌ | ✅ fail-closed physical approval gate |
 | Hardware keypad | ❌ | ✅ |
 | Idea engine | ❌ | ✅ |
+| Your own Telegram account | ❌ | ✅ read dialogs, history, search (`claw-tg`) |
+| Custom slash commands | ❌ | ✅ authored as vault `.md` files from your phone |
+| Canvas · location · lunch watcher | ❌ | ✅ |
 | Docs | this README | **README + SETUP + CLI reference + operations runbook + per-subsystem guides** |
 | Maintained | frozen June 2026 | ✅ current |
 
@@ -219,6 +225,20 @@ Tailscale SSH behind a **fail-closed Allow/Deny gate**: every command the bot ru
 pops a physical approval on that machine (asleep/locked/timeout = denied), with a phone prompt,
 piped-stdin visibility, optional time-boxed tap-free windows, and a keychain-context exec bridge
 for CLIs whose tokens live in the macOS keychain.
+</details>
+
+<details>
+<summary><b>💵 finance · 🎓 school · ✈️ location · 🥪 lunchdrop — the smaller ones</b></summary>
+
+**finance** keeps a balance and subscription ledger with deterministic *new subscription / price
+change / cancelled* alerts, plus daily asset snapshots (crypto wallets, BTC xpub walks, TON
+numbers, Steam skins) consolidated into a net-worth line every session can see. **school** syncs
+Canvas enrolments to the current term and pulls module files into your vault. **location** works
+out where you are from flight events on your calendar — no GPS — and feeds the timezone your
+agents reason in. **lunchdrop** watches an office lunch menu with zero model calls; it's really a
+worked example of the deterministic-scraper pattern you'd copy for your own site.
+
+Each ships with setup, credentials, smoke tests and an honest list of what's broken.
 </details>
 
 <details>
