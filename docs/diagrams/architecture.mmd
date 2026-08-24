@@ -1,0 +1,20 @@
+flowchart TD
+    You(["You · Telegram"]) <--> Router["grammY router<br/>auth · per-topic queue · media · streaming"]
+
+    Router -->|"one isolated session<br/>per forum topic"| T1["Coding<br/>Claude Code session"]
+    Router --> T2["Coach<br/>Claude Code session"]
+    Router --> T3["General<br/>Claude Code session"]
+
+    T1 --> Mem["Layered memory<br/>daily notes → nightly rollup →<br/>MEMORY.md + per-topic"]
+    T2 --> Mem
+    T3 --> Mem
+    Mem -.->|"injected at session start,<br/>re-injected every N turns"| Router
+
+    T1 -.->|"shells out to"| CLI["CLI toolbelt<br/>post · react · media ·<br/>diagrams · delegate · watch"]
+    CLI -.-> You
+
+    Crons["Cron + heartbeat jobs"] -->|"proactive nudges"| Router
+
+    style You fill:#26A5E4,color:#fff
+    style Mem fill:#D97757,color:#fff
+    style CLI fill:#3178C6,color:#fff

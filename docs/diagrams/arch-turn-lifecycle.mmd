@@ -1,0 +1,19 @@
+sequenceDiagram
+    actor U as You (Telegram)
+    participant R as grammY router
+    participant MW as middleware
+    participant S as session manager
+    participant C as claude -p
+    participant T as Telegram
+
+    U->>R: message in a topic
+    R->>MW: update
+    MW->>MW: auth (owner only) · per-topic queue · media → files
+    MW->>S: routed message
+    S->>S: resolve / resume the session id for this topic
+    S->>C: spawn claude -p with the assembled prompt
+    C-->>S: streamed tokens + tool calls
+    S-->>T: live "typing…" / draft edits
+    C->>S: final text (+ inline markers: reactions, files, silence)
+    S->>T: finalize as native rich text (HTML fallback)
+    S->>S: append to daily notes + cross-topic live-feed

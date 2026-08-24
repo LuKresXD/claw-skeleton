@@ -19,27 +19,7 @@ the group's General session.
 
 ## Turn lifecycle
 
-```mermaid
-sequenceDiagram
-    actor U as You (Telegram)
-    participant R as grammY router
-    participant MW as middleware
-    participant S as session manager
-    participant C as claude -p
-    participant T as Telegram
-
-    U->>R: message in a topic
-    R->>MW: update
-    MW->>MW: auth (owner only) · per-topic queue · media → files
-    MW->>S: routed message
-    S->>S: resolve / resume the session id for this topic
-    S->>C: spawn claude -p with the assembled prompt
-    C-->>S: streamed tokens + tool calls
-    S-->>T: live "typing…" / draft edits
-    C->>S: final text (+ inline markers: reactions, files, silence)
-    S->>T: finalize as native rich text (HTML fallback)
-    S->>S: append to daily notes + cross-topic live-feed
-```
+![Turn lifecycle sequence: Telegram, grammY router, middleware, session manager and claude -p](docs/diagrams/arch-turn-lifecycle.png)
 
 Key properties:
 
@@ -56,14 +36,7 @@ Key properties:
 
 The bot starts fresh every session, so continuity lives in files, in three tiers:
 
-```mermaid
-flowchart LR
-    A["Daily notes<br/>state/memory/YYYY-MM-DD.md<br/>append-only, raw"]
-      -->|nightly LLM rollup| B["MEMORY.md<br/>durable, lean"]
-    A -->|nightly LLM rollup| D["topic-name.md<br/>per-topic state"]
-    B -.->|injected at session start| P["System prompt"]
-    D -.->|injected for that topic| P
-```
+![Layered memory: append-only daily notes roll up nightly into MEMORY.md and per-topic files, both injected into the system prompt](docs/diagrams/arch-memory-layers.png)
 
 - **Daily notes** — every session appends YAML-block entries (`importance`, `tags`,
   `summarized_at: null`). The bar is low: if in doubt, log it.

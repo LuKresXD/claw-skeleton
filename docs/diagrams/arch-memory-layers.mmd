@@ -1,0 +1,6 @@
+flowchart LR
+    A["Daily notes<br/>state/memory/YYYY-MM-DD.md<br/>append-only, raw"]
+      -->|nightly LLM rollup| B["MEMORY.md<br/>durable, lean"]
+    A -->|nightly LLM rollup| D["topic-name.md<br/>per-topic state"]
+    B -.->|injected at session start| P["System prompt"]
+    D -.->|injected for that topic| P

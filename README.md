@@ -53,63 +53,15 @@ Claw ·  💭 reads the unit file, checks systemctl, greps the logs      ← liv
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    You(["You · Telegram"]) <--> Router["grammY router<br/>auth · per-topic queue · media · streaming"]
-
-    Router -->|"one isolated session<br/>per forum topic"| T1["Coding<br/>Claude Code session"]
-    Router --> T2["Coach<br/>Claude Code session"]
-    Router --> T3["General<br/>Claude Code session"]
-
-    T1 --> Mem["Layered memory<br/>daily notes → nightly rollup →<br/>MEMORY.md + per-topic"]
-    T2 --> Mem
-    T3 --> Mem
-    Mem -.->|"injected at session start,<br/>re-injected every N turns"| Router
-
-    T1 -.->|"shells out to"| CLI["CLI toolbelt<br/>post · react · media ·<br/>diagrams · delegate · watch"]
-    CLI -.-> You
-
-    Crons["Cron + heartbeat jobs"] -->|"proactive nudges"| Router
-
-    style You fill:#26A5E4,color:#fff
-    style Mem fill:#D97757,color:#fff
-    style CLI fill:#3178C6,color:#fff
-```
+![Architecture: Telegram to a grammY router, which gives each forum topic its own isolated Claude Code session, layered memory and cron jobs](docs/diagrams/architecture.png)
 
 **The turn lifecycle** — what happens between your message and the reply:
 
-```mermaid
-sequenceDiagram
-    actor U as You
-    participant R as Router
-    participant S as Session manager
-    participant C as claude -p
-    participant T as Telegram
-
-    U->>R: message in a topic
-    R->>R: auth · queue · media → files
-    R->>S: routed message
-    S->>S: resume this topic's session id
-    S->>C: spawn with persona + memory + rules
-    C-->>T: streamed tokens → live message edits
-    C->>C: tool calls → 💭 work-log
-    C->>S: final text + inline markers
-    S->>T: native rich text (HTML fallback)
-    S->>S: append to daily notes
-```
+![Turn lifecycle: your message goes router to session manager to claude -p and streams back to Telegram as native rich text](docs/diagrams/turn-lifecycle.png)
 
 **The memory pipeline** — why it remembers you tomorrow:
 
-```mermaid
-flowchart LR
-    Turn["every turn"] --> Daily["state/memory/<br/>YYYY-MM-DD.md<br/><i>raw, append-only</i>"]
-    Daily -->|"nightly LLM rollup<br/>+ promotion rules"| Long["MEMORY.md<br/><i>durable facts</i>"]
-    Daily -->|"topic-scoped state"| Topic["topic-&lt;name&gt;.md<br/><i>per-agent context</i>"]
-    Long -.->|"injected into<br/>every session"| Turn
-    Topic -.-> Turn
-
-    style Long fill:#D97757,color:#fff
-```
+![Memory pipeline: every turn appends to daily notes, a nightly rollup promotes durable facts to MEMORY.md and per-topic state, both injected into every session](docs/diagrams/memory-pipeline.png)
 
 > 📖 **Deeper dive:** [ARCHITECTURE.md](./ARCHITECTURE.md) — turn lifecycle, session isolation,
 > the memory pipeline, the rich-output path, and the CLI toolbelt, with more diagrams.
@@ -205,31 +157,7 @@ The private repo is the **complete, current, production system**, sanitized for 
 Every subsystem below ran for months in the real daily-driver deployment, and the docs keep the
 operational lessons that explain *why* each piece is built the way it is.
 
-```mermaid
-flowchart LR
-    Core["🆓 <b>This repo</b><br/>core engine<br/><i>router · sessions · memory<br/>rich output · personas · crons</i>"]
-
-    Core ==> Life["📥 <b>Life</b>"]
-    Core ==> Reach["🤖 <b>Reach</b>"]
-    Core ==> Engine["⚙️ <b>Engine</b>"]
-
-    Life --> L1["📬 email · calendar<br/>packages · finance"]
-    Life --> L2["❤️ health · wearables<br/>food · insights"]
-    Life --> L3["💡 idea engine"]
-
-    Reach --> R1["☎️ real phone calls"]
-    Reach --> R2["🌐 browser agent"]
-    Reach --> R3["💻 Mac control<br/>+ 🎛 hardware keypad"]
-
-    Engine --> E1["🚀 multi-account routing"]
-    Engine --> E2["🔍 memory search<br/>+ /rewind · /compact"]
-    Engine --> E3["👥 partner mode<br/>+ group workspaces"]
-
-    style Core fill:#1f2937,color:#fff,stroke:#3178C6
-    style Life fill:#7c2d12,color:#fff
-    style Reach fill:#7c2d12,color:#fff
-    style Engine fill:#7c2d12,color:#fff
-```
+![Claw Pro feature map: this repo is the free core engine; Pro adds the Life, Reach and Engine subsystems](docs/diagrams/claw-pro-map.png)
 
 ### Free vs Pro
 

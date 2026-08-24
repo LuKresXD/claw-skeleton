@@ -1,0 +1,8 @@
+flowchart LR
+    Turn["every turn"] --> Daily["state/memory/<br/>YYYY-MM-DD.md<br/><i>raw, append-only</i>"]
+    Daily -->|"nightly LLM rollup<br/>+ promotion rules"| Long["MEMORY.md<br/><i>durable facts</i>"]
+    Daily -->|"topic-scoped state"| Topic["topic-&lt;name&gt;.md<br/><i>per-agent context</i>"]
+    Long -.->|"injected into<br/>every session"| Turn
+    Topic -.-> Turn
+
+    style Long fill:#D97757,color:#fff

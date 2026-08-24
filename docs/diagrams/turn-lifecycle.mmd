@@ -1,0 +1,17 @@
+sequenceDiagram
+    actor U as You
+    participant R as Router
+    participant S as Session manager
+    participant C as claude -p
+    participant T as Telegram
+
+    U->>R: message in a topic
+    R->>R: auth · queue · media → files
+    R->>S: routed message
+    S->>S: resume this topic's session id
+    S->>C: spawn with persona + memory + rules
+    C-->>T: streamed tokens → live message edits
+    C->>C: tool calls → 💭 work-log
+    C->>S: final text + inline markers
+    S->>T: native rich text (HTML fallback)
+    S->>S: append to daily notes

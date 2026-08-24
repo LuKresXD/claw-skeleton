@@ -1,0 +1,23 @@
+flowchart LR
+    Core["🆓 <b>This repo</b><br/>core engine<br/><i>router · sessions · memory<br/>rich output · personas · crons</i>"]
+
+    Core ==> Life["📥 <b>Life</b>"]
+    Core ==> Reach["🤖 <b>Reach</b>"]
+    Core ==> Engine["⚙️ <b>Engine</b>"]
+
+    Life --> L1["📬 email · calendar<br/>packages · finance"]
+    Life --> L2["❤️ health · wearables<br/>food · insights"]
+    Life --> L3["💡 idea engine"]
+
+    Reach --> R1["☎️ real phone calls"]
+    Reach --> R2["🌐 browser agent"]
+    Reach --> R3["💻 Mac control<br/>+ 🎛 hardware keypad"]
+
+    Engine --> E1["🚀 multi-account routing"]
+    Engine --> E2["🔍 memory search<br/>+ /rewind · /compact"]
+    Engine --> E3["👥 partner mode<br/>+ group workspaces"]
+
+    style Core fill:#1f2937,color:#fff,stroke:#3178C6
+    style Life fill:#7c2d12,color:#fff
+    style Reach fill:#7c2d12,color:#fff
+    style Engine fill:#7c2d12,color:#fff
